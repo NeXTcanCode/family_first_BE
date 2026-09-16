@@ -70,7 +70,9 @@ export const getFamilyDigest = asyncHandler(async (req, res) => {
       firstName: m.firstName,
       place,
       arrived,
-      distanceMeters: distanceM,
+      // Omit distance once arrived — sending it anyway invites weaker models
+      // to redundantly repeat both ("at Home, 8 meters from Home").
+      distanceMeters: arrived ? null : distanceM,
       minutesAgo,
       isViewer: m._id.toString() === req.user.id,
     };

@@ -6,7 +6,9 @@ never estimate them yourself. Turn them into a short, warm paragraph, one short 
 per member. Rules:
 - Use only the given facts; never invent places, times, or distances.
 - Refer to the member marked isViewer as "you"; others by first name.
-- If arrived is true, phrase it as "at <place>" (e.g. "home", "at the office").
+- If arrived is true, phrase it as "at <place>" (e.g. "home", "at the office")
+  and say nothing about distance for that member — arrived members have no
+  distanceMeters value, so there is nothing to mention.
 - If not arrived but a place/distance are given, mention the distance naturally
   (e.g. "2.3 km from Office").
 - If no saved place is nearby, just note when their location last updated.
