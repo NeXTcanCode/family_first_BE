@@ -1,7 +1,8 @@
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
-// Left unset on purpose when using a free OpenRouter key with a default
-// model configured — omitting "model" below lets OpenRouter pick it.
-const DEFAULT_MODEL = process.env.OPENROUTER_MODEL;
+// OpenRouter always requires a "model" field — there's no account-level
+// default. OPENROUTER_MODEL=openrouter/free routes to OpenRouter's own
+// zero-cost auto-router, which picks an available free model per request.
+const DEFAULT_MODEL = process.env.OPENROUTER_MODEL || "openrouter/free";
 
 // Thin fetch wrapper around OpenRouter's OpenAI-compatible chat completions
 // endpoint. Deliberately dependency-free (built-in fetch) so this isolated
