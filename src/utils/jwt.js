@@ -17,6 +17,6 @@ export function cookieOptions() {
     httpOnly: true,
     sameSite,
     secure: sameSite === "none", // SameSite=None requires Secure
-    maxAge: 7 * 24 * 60 * 60, // matches default JWT expiry
+    maxAge: 7 * 24 * 60 * 60 * 1000, // matches default JWT expiry (Express maxAge is in ms)
   };
 }
