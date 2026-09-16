@@ -23,7 +23,7 @@ async function start() {
   initSocket(io);
 
   server.listen(PORT, () => {
-    console.log(`[${NODE_ENV}] API + sockets on http://localhost:${PORT}`);
+    console.log(`[${NODE_ENV}] API + sockets listening on port ${PORT}`);
   });
 }
 

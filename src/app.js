@@ -14,9 +14,12 @@ import errorHandler from "./middleware/errorHandler.js";
 export default function createApp(ioRef = { io: null }) {
   const app = express();
 
+  // Strip a trailing slash: browsers never send one in the Origin header, so a
+  // trailing slash in CLIENT_ORIGIN would otherwise fail the exact-match check.
+  const clientOrigin = process.env.CLIENT_ORIGIN?.replace(/\/+$/, "");
   app.use(
     cors({
-      origin: process.env.CLIENT_ORIGIN,
+      origin: clientOrigin,
       credentials: true,
     })
   );
