@@ -10,6 +10,8 @@ function publicUser(user) {
     middleName: user.middleName,
     lastName: user.lastName,
     email: user.email,
+    homeAddress: user.homeAddress,
+    officeAddress: user.officeAddress,
   };
 }
 

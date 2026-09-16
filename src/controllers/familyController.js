@@ -9,6 +9,7 @@ import {
   FAMILY_UPDATED,
   FAMILY_DELETED,
 } from "../sockets/events.js";
+import { matchNearestPlace, generateDigest, getCached, setCached } from "../ai/index.js";
 
 export const createFamily = asyncHandler(async (req, res) => {
   const family = await Family.create({
@@ -43,6 +44,46 @@ export const getFamily = asyncHandler(async (req, res) => {
     return res.status(403).json({ error: "Not a member of this family" });
   }
   res.json({ family });
+});
+
+export const getFamilyDigest = asyncHandler(async (req, res) => {
+  const family = await Family.findById(req.params.id).populate(
+    "members",
+    "firstName lastLocation locationUpdatedAt homeAddress officeAddress"
+  );
+  if (!family) {
+    return res.status(404).json({ error: "Family not found" });
+  }
+  if (!family.members.some((m) => m._id.toString() === req.user.id)) {
+    return res.status(403).json({ error: "Not a member of this family" });
+  }
+
+  const facts = family.members.map((m) => {
+    const { place, distanceM, arrived } = matchNearestPlace(m.lastLocation, {
+      homeAddress: m.homeAddress,
+      officeAddress: m.officeAddress,
+    });
+    const minutesAgo = m.locationUpdatedAt
+      ? Math.round((Date.now() - new Date(m.locationUpdatedAt).getTime()) / 60000)
+      : null;
+    return {
+      firstName: m.firstName,
+      place,
+      arrived,
+      distanceMeters: distanceM,
+      minutesAgo,
+      isViewer: m._id.toString() === req.user.id,
+    };
+  });
+
+  const cached = getCached(family._id.toString(), req.user.id, facts);
+  if (cached) {
+    return res.json({ digest: cached.digestText, computedAt: cached.computedAt, facts });
+  }
+
+  const digest = await generateDigest(facts);
+  const entry = setCached(family._id.toString(), req.user.id, facts, digest);
+  res.json({ digest: entry.digestText, computedAt: entry.computedAt, facts });
 });
 
 export const addMember = asyncHandler(async (req, res) => {

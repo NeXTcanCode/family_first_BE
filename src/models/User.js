@@ -19,6 +19,16 @@ const userSchema = new mongoose.Schema(
       _id: false,
     },
     locationUpdatedAt: { type: Date },
+    homeAddress: {
+      lat: { type: Number },
+      lng: { type: Number },
+      _id: false,
+    },
+    officeAddress: {
+      lat: { type: Number },
+      lng: { type: Number },
+      _id: false,
+    },
   },
   { timestamps: true }
 );

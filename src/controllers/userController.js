@@ -2,6 +2,7 @@ import User from "../models/User.js";
 import Family from "../models/Family.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import { LOCATION_UPDATED } from "../sockets/events.js";
+import { invalidateDigestCache } from "../ai/index.js";
 
 export const lookupByEmail = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email: req.query.email }).select(
@@ -29,10 +30,24 @@ export const updateLocation = asyncHandler(async (req, res) => {
     lastLocation: user.lastLocation,
     locationUpdatedAt: user.locationUpdatedAt,
   };
+  const families = await Family.find({ members: req.user.id }).select("_id");
   if (req.io) {
-    const families = await Family.find({ members: req.user.id }).select("_id");
     const rooms = families.map((f) => `family:${f._id}`);
     req.io.to(rooms).emit(LOCATION_UPDATED, payload);
   }
+  families.forEach((f) => invalidateDigestCache(f._id.toString()));
   res.json({ user });
+});
+
+export const updateSavedAddresses = asyncHandler(async (req, res) => {
+  const update = {};
+  if (req.body.home) update.homeAddress = req.body.home;
+  if (req.body.office) update.officeAddress = req.body.office;
+
+  const user = await User.findByIdAndUpdate(req.user.id, update, { new: true });
+
+  const families = await Family.find({ members: req.user.id }).select("_id");
+  families.forEach((f) => invalidateDigestCache(f._id.toString()));
+
+  res.json({ homeAddress: user.homeAddress, officeAddress: user.officeAddress });
 });
