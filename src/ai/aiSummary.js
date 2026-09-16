@@ -32,6 +32,9 @@ export function templateDigest(facts) {
       if (f.place && f.distanceMeters != null) {
         return `${who} ${formatDistance(f.distanceMeters)} from ${f.place}.`;
       }
+      if (f.minutesAgo == null) {
+        return `${f.isViewer ? "You haven't" : `${f.firstName} hasn't`} shared a location yet.`;
+      }
       return `${f.isViewer ? "Your" : `${f.firstName}'s`} location last updated ${f.minutesAgo} min ago.`;
     })
     .join(" ");
