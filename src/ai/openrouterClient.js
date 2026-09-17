@@ -1,8 +1,9 @@
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 // OpenRouter always requires a "model" field — there's no account-level
-// default. OPENROUTER_MODEL=openrouter/free routes to OpenRouter's own
-// zero-cost auto-router, which picks an available free model per request.
-const DEFAULT_MODEL = process.env.OPENROUTER_MODEL || "openrouter/free";
+// default. Pinned to a plain free instruct model rather than the
+// openrouter/free auto-router, which can land on a reasoning model that
+// leaks its chain-of-thought into message.content instead of a clean answer.
+const DEFAULT_MODEL = process.env.OPENROUTER_MODEL || "meta-llama/llama-3.3-70b-instruct:free";
 
 // Thin fetch wrapper around OpenRouter's OpenAI-compatible chat completions
 // endpoint. Deliberately dependency-free (built-in fetch) so this isolated

@@ -13,7 +13,10 @@ per member. Rules:
   (e.g. "2.3 km from Office").
 - If no saved place is nearby, just note when their location last updated.
 - Never mention coordinates, JSON, or that you were given structured data.
-- Keep the whole output under 80 words.`;
+- Keep the whole output under 80 words.
+- Output ONLY the finished paragraph — no reasoning, no analysis, no restating
+  these rules, no explaining which case applies to which member. If you think
+  through the problem, do that silently and reply with just the final text.`;
 
 function formatDistance(distanceM) {
   if (distanceM == null) return null;
