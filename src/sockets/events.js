@@ -4,3 +4,7 @@ export const LOCATION_UPDATED = "location:updated";
 export const FAMILY_CREATED = "family:created";
 export const FAMILY_UPDATED = "family:updated";
 export const FAMILY_DELETED = "family:deleted";
+export const JOIN_REQUESTED = "join:requested";
+export const JOIN_REJECTED = "join:rejected";
+export const INVITE_RECEIVED = "invite:received";
+export const INVITE_REJECTED = "invite:rejected";

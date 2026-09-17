@@ -9,6 +9,20 @@ const familySchema = new mongoose.Schema(
       required: true,
     },
     members: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    joinRequests: [
+      {
+        user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+        // "request" = the user asked to join; "accept/reject" is the creator's call.
+        // "invite" = the creator invited this user; "accept/reject" is the user's call.
+        type: { type: String, enum: ["request", "invite"], default: "request" },
+        status: {
+          type: String,
+          enum: ["pending", "accepted", "rejected"],
+          default: "pending",
+        },
+        requestedAt: { type: Date, default: Date.now },
+      },
+    ],
   },
   { timestamps: true }
 );
